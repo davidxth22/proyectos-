@@ -24,60 +24,50 @@ datos = pd.read_csv("datos.csv")
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #Kmeans code
-X = datos[['N° Noches', 'N° Pasajeros', 'Precio x Noche','Mascota','Pago en USD']]
-warnings.filterwarnings("ignore", category=UserWarning, message="KMeans is known to have a memory leak")
-kmeans = KMeans(n_clusters=4, random_state=0,n_init=10)
-X.loc[:, 'Cluster']= kmeans.fit_predict(X)
-X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
+
+@st.cache_data
+def kmeans(datos):
+    #modelo
+    X = datos[['N° Noches', 'N° Pasajeros', 'Precio x Noche','Mascota','Pago en USD']]
+    warnings.filterwarnings("ignore", category=UserWarning, message="KMeans is known to have a memory leak")
+    kmeans = KMeans(n_clusters=4, random_state=0,n_init=10)
+    X.loc[:, 'Cluster']= kmeans.fit_predict(X)
+    X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
+
+    #grafico cantidad de clientes
+    counts = X["Cluster"].value_counts().sort_index()
+    counts.index = ["Cliente 1","Cliente 2","Cliente 3","Cliente 4"]
+    fig1 = plt.figure(figsize=(12, 6))
+    sns.barplot(x=counts.index, y=counts.values);
+    plt.title("Cantidad de cada cliente")
+    plt.ylabel("Cantidad")
+    plt.xlabel("Tipo de cliente")
+
+    #Grafico promedio clientes
+    cluster_means =X.groupby('Cluster').mean()
+    num_clusters = len(cluster_means.index)
+    num_vars = len(cluster_means.columns)
+    y_lims = {var: (cluster_means[var].min() * 0.9, cluster_means[var].max() * 1.1) for var in cluster_means.columns}
+    fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True)
+    row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']  
+    h=1
+    for i, cluster in enumerate(cluster_means.index):
+        for j, var in enumerate(cluster_means.columns):
+            axes[i, j].bar([f'Cliente {h}'], [cluster_means.loc[cluster, var]], color=row_colors[i % len(row_colors)], edgecolor='black')
+            axes[i, j].set_title(f'{var}', fontsize=14)
+            axes[i, j].set_ylabel('Promedio', fontsize=9)
+            axes[i, j].set_ylim(y_lims[var])
+            axes[i, j].tick_params(axis='y', labelsize=9)
+        h+=1
+    plt.suptitle('Promedio de Variables por Cliente', fontsize=16, weight='bold')
+
+    
+    
+    return X,fig1,fig2
+
+X,fig1,fig2 = kmeans(datos)
 
 
-#grafico cantidad de clientes
-
-counts = X["Cluster"].value_counts().sort_index()
-counts.index = ["Cliente 1","Cliente 2","Cliente 3","Cliente 4"]
-fig1 = plt.figure(figsize=(12, 6))
-sns.barplot(x=counts.index, y=counts.values);
-plt.title("Cantidad de cada cliente")
-plt.ylabel("Cantidad")
-plt.xlabel("Tipo de cliente")
-
-
-
-
-#Grafico promedio clientes
-cluster_means =X.groupby('Cluster').mean()
-
-# Definir el número de filas (clusters) y columnas (variables)
-num_clusters = len(cluster_means.index)
-num_vars = len(cluster_means.columns)
-
-# Obtener los máximos y mínimos de cada variable para mantener la escala
-y_lims = {var: (cluster_means[var].min() * 0.9, cluster_means[var].max() * 1.1) for var in cluster_means.columns}
-
-# Crear figura y subgráficos con tamaño adecuado (3 filas, 5 columnas)
-fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True)
-
-# Colores distintivos por clúster (por fila)
-row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']  # Añadir más colores si hay más clusters
-
-# Iterar sobre los clusters y variables para rellenar cada subgráfico
-h=1
-for i, cluster in enumerate(cluster_means.index):
-    for j, var in enumerate(cluster_means.columns):
-        # Graficar cada variable de cada clúster en la posición correspondiente
-        axes[i, j].bar([f'Cliente {h}'], [cluster_means.loc[cluster, var]], color=row_colors[i % len(row_colors)], edgecolor='black')
-        axes[i, j].set_title(f'{var}', fontsize=14)
-        axes[i, j].set_ylabel('Promedio', fontsize=9)
-        #axes[i, j].set_xlabel('Clúster', fontsize=9)
-        # Establecer los mismos límites de Y en cada columna (variable) y mostrar diferencias
-        axes[i, j].set_ylim(y_lims[var])
-        
-        
-        # Aumentar tamaño de etiquetas del eje Y para mejor visibilidad
-        axes[i, j].tick_params(axis='y', labelsize=9)
-    h+=1
-# Ajustar el diseño para evitar solapamiento de títulos y etiquetas
-plt.suptitle('Promedio de Variables por Cliente', fontsize=16, weight='bold')
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #Estadistica descriptiva
@@ -213,7 +203,7 @@ elif opt == "Analisís de datos":
     st.pyplot(fig3) 
 
 else:
-    st.write("### Serie de tiempo del Promedio mensual de precio por noche")
+    st.write("### Serie de tiempo del Promedio mensual de precio por noche, donde se ajusta un modelo SARIMA para predecir...")
     st.pyplot(fig4) 
     
 
