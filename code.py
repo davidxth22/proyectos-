@@ -71,49 +71,47 @@ X,fig1,fig2 = kmeans(datos)
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #Estadistica descriptiva
-columns_to_plot_pie = [
-    'Año', 
-    'Asset Code', 
-    'Mascota', 
-    'Canal de Venta', 
-    'Medio de Pago', 
-    'Boleta/Factura', 
-    'Pago en USD'
-]
 
-# Configuración de estilo de Seaborn
-sns.set_theme(style="whitegrid")
-fig3, axes = plt.subplots(4, 3, figsize=(18, 20))  # Tamaño de la figura ajustado
 
-# Crear gráficos de torta para cada columna
-for i, column in enumerate(columns_to_plot_pie):
-    # Seleccionar el subplot adecuado en la cuadrícula
-    row, col = divmod(i, 3)
-    ax = axes[row, col]
-    
-    # Contar la cantidad de observaciones por cada categoría en la columna
-    counts = datos[column].value_counts()
-    
-    # Crear el gráfico de torta
-    if column == "Mascota":
-        cc = ["Mascota","Sin Mascota"]
-        ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
-    elif column == "Pago en USD":
-        cc = ["Paga en USD","No paga en USD"]
-        ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
-    else:
-        ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
-    
-    ax.set_title(f'Distribución de Observaciones por {column}')
-    ax.axis('equal')  # Para que el gráfico de torta sea un círculo
+def stats(datos):
+    columns_to_plot_pie = [
+        'Año', 
+        'Asset Code', 
+        'Mascota', 
+        'Canal de Venta', 
+        'Medio de Pago', 
+        'Boleta/Factura', 
+        'Pago en USD'
+    ]
+    sns.set_theme(style="whitegrid")
+    fig3, axes = plt.subplots(4, 3, figsize=(18, 20)) 
+    for i, column in enumerate(columns_to_plot_pie):
+        row, col = divmod(i, 3)
+        ax = axes[row, col]
+        counts = datos[column].value_counts()
+        if column == "Mascota":
+            cc = ["Mascota","Sin Mascota"]
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+        elif column == "Pago en USD":
+            cc = ["Paga en USD","No paga en USD"]
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+        else:
+            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
+        ax.set_title(f'Distribución de Observaciones por {column}')
+        ax.axis('equal') 
+    for j in range(len(columns_to_plot_pie), 12):
+        fig3.delaxes(axes.flatten()[j])
 
-# Ocultar subplots vacíos si hay menos de 12 columnas
-for j in range(len(columns_to_plot_pie), 12):
-    fig3.delaxes(axes.flatten()[j])
+    plt.tight_layout()
+    plt.show()
+    return fig3
 
-# Ajustar el espacio entre subplots
-plt.tight_layout()
-plt.show()
+
+fig3 = stats(datos)
+
+  
+
+
 
 
 
@@ -123,59 +121,62 @@ plt.show()
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
-#Serie
-
-df_serie = datos[['Año','Mes','Precio x Noche']].copy()
-df_serie = datos[['Año','Mes','Precio x Noche']].copy()
-meses = {
-    'Enero': '01', 'Febrero': '02', 'Marzo': '03', 'Abril': '04',
-    'Mayo': '05', 'Junio': '06', 'Julio': '07', 'Agosto': '08',
-    'Septiembre': '09', 'Octubre': '10', 'Noviembre': '11', 'Diciembre': '12'
-}
-df_serie['Mes'] = df_serie['Mes'].str.split('_').str[0].map(meses)
-df_serie['T'] = pd.to_datetime(df_serie['Año'].astype(str) + '-' + df_serie['Mes'] + '-01', format='%Y-%m-%d')
-df_serie.drop(["Mes","Año"],inplace = True,axis = 1)
-serie_mes = df_serie.groupby('T')['Precio x Noche'].mean().reset_index()
-serie_mes['T'] = pd.to_datetime(serie_mes['T'])  # Convertir a datetime
-serie_mes.set_index('T', inplace=True)
-#separación train - test
-fecha_inicio = '2022-01-01'
-fecha_fin = '2024-03-01'
-# Filtrar el DataFrame por el rango de fechas
-train = serie_mes.loc[(serie_mes.index >= fecha_inicio) & (serie_mes.index <= fecha_fin)]
-fecha_inicio = '2024-04-01'
-fecha_fin = '2024-09-01'
-test = serie_mes.loc[(serie_mes.index >= fecha_inicio) & (serie_mes.index <= fecha_fin)]
-
-p,d,q,P,D,Q = (2, 0, 1, 1, 0, 1)
-modelo_arima = ARIMA(train,order=(p, d, q), seasonal_order=(P,D,Q,12))
-modelo_fit = modelo_arima.fit()
-pred_start = test.index[0]
-pred_end = test.index[-1]
-forecast = modelo_fit.get_forecast(steps=len(test))
-pred = forecast.predicted_mean
-intervalos_confianza = forecast.conf_int()
-#mse = mean_squared_error(test, pred)
-pred = pd.DataFrame(pred)
-
-fig4 = plt.figure(figsize=(12, 6))
-sns.lineplot(data=train, x='T', y='Precio x Noche', marker='o',label='Entrenamiento')
-sns.lineplot(data=test, x='T', y='Precio x Noche', marker='o',label='Prueba')
-sns.lineplot(data=pred, x=pred.index, y='predicted_mean', marker='o',label='Predicción')
-
-plt.fill_between(pred.index, 
-                 intervalos_confianza.iloc[:, 0],  # Límite inferior
-                 intervalos_confianza.iloc[:, 1],  # Límite superior
-                 color='gray', alpha=0.2, label='Intervalo de confianza')
-
-plt.title('Promedio Precio x Noche por Mes')
-plt.xlabel('Año-Mes')
-plt.ylabel('Promedio de Precio x Noche')
-plt.xticks(rotation=45)
-plt.grid()
-plt.tight_layout()
+#Serie de tiempo
+@st.cache_data
+def serie(datos):
+    df_serie = datos[['Año','Mes','Precio x Noche']].copy()
+    meses = {
+        'Enero': '01', 'Febrero': '02', 'Marzo': '03', 'Abril': '04',
+        'Mayo': '05', 'Junio': '06', 'Julio': '07', 'Agosto': '08',
+        'Septiembre': '09', 'Octubre': '10', 'Noviembre': '11', 'Diciembre': '12'
+    }
 
 
+    df_serie['Mes'] = df_serie['Mes'].str.split('_').str[0].map(meses)
+    df_serie['T'] = pd.to_datetime(df_serie['Año'].astype(str) + '-' + df_serie['Mes'] + '-01', format='%Y-%m-%d')
+    df_serie.drop(["Mes","Año"],inplace = True,axis = 1)
+    serie_mes = df_serie.groupby('T')['Precio x Noche'].mean().reset_index()
+    serie_mes['T'] = pd.to_datetime(serie_mes['T'])  # Convertir a datetime
+    serie_mes.set_index('T', inplace=True)
+    #separación train - test
+    fecha_inicio = '2022-01-01'
+    fecha_fin = '2024-03-01'
+    # Filtrar el DataFrame por el rango de fechas
+    train = serie_mes.loc[(serie_mes.index >= fecha_inicio) & (serie_mes.index <= fecha_fin)]
+    fecha_inicio = '2024-04-01'
+    fecha_fin = '2024-09-01'
+    test = serie_mes.loc[(serie_mes.index >= fecha_inicio) & (serie_mes.index <= fecha_fin)]
+
+    p,d,q,P,D,Q = (2, 0, 1, 1, 0, 1)
+    modelo_arima = ARIMA(train,order=(p, d, q), seasonal_order=(P,D,Q,12))
+    modelo_fit = modelo_arima.fit()
+    pred_start = test.index[0]
+    pred_end = test.index[-1]
+    forecast = modelo_fit.get_forecast(steps=len(test))
+    pred = forecast.predicted_mean
+    intervalos_confianza = forecast.conf_int()
+    #mse = mean_squared_error(test, pred)
+    pred = pd.DataFrame(pred)
+
+    fig4 = plt.figure(figsize=(12, 6))
+    sns.lineplot(data=train, x='T', y='Precio x Noche', marker='o',label='Entrenamiento')
+    sns.lineplot(data=test, x='T', y='Precio x Noche', marker='o',label='Prueba')
+    sns.lineplot(data=pred, x=pred.index, y='predicted_mean', marker='o',label='Predicción')
+
+    plt.fill_between(pred.index, 
+                     intervalos_confianza.iloc[:, 0],  # Límite inferior
+                     intervalos_confianza.iloc[:, 1],  # Límite superior
+                     color='gray', alpha=0.2, label='Intervalo de confianza')
+    
+    plt.title('Promedio Precio x Noche por Mes')
+    plt.xlabel('Año-Mes')
+    plt.ylabel('Promedio de Precio x Noche')
+    plt.xticks(rotation=45)
+    plt.grid()
+    plt.tight_layout()
+    return fig4
+
+fig4 = serie(datos)
 
 
 
