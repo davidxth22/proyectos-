@@ -200,21 +200,37 @@ plt.tight_layout()
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #graficos
 
-#col1, col2 = st.columns([2, 1])
-col1, col2 = st.columns([1,2]) 
-col3 = st.container()  
-with col1:
+opt = st.radio("Sección :",["Clientes","Analisis de datos","Serie precio por noche"])
+
+if opt == "Clientes":
     st.write("### Clientes")
     st.pyplot(fig1)
     st.pyplot(fig2)
-
-with col2:
+elif opt == "Analisis de datos":
     st.write("### Datos")
     st.pyplot(fig3) 
 
-with col3:
-   st.write("### Serie")
-   st.pyplot(fig4) 
+else:
+    st.write("### Serie")
+    st.pyplot(fig4) 
+    
+
+
+#col1, col2 = st.columns([2, 1])
+#col1, col2 = st.columns([1,2]) 
+#col3 = st.container()  
+#with col1:
+#    st.write("### Clientes")
+#    st.pyplot(fig1)
+#    st.pyplot(fig2)
+
+#with col2:
+#    st.write("### Datos")
+#    st.pyplot(fig3) 
+
+#with col3:
+#   st.write("### Serie")
+#   st.pyplot(fig4) 
 
 
 
