@@ -200,18 +200,20 @@ plt.tight_layout()
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #graficos
 
-opt = st.radio("Sección :",["Clientes","Analisis de datos","Serie precio por noche"])
+opt = st.radio("Sección :",["Clientes","Analisís de datos","Serie precio por noche"])
 
 if opt == "Clientes":
-    st.write("### Clientes")
+    st.write("# Clientes")
+    st.write("### En esta sección se realizo una segmentación de clientes, donde se determino que existen 4 clase de clientes distintos.  Para la segmentación se ocuparon las variables Nº Noches, Nº pasajeros, Precio por Noche, Mascota y Pago en USD")
     st.pyplot(fig1)
+    st.write("### Para ver las diferencias de cada tipo de cliente respecto a otro, se calculo el promedio de cada variable")
     st.pyplot(fig2)
-elif opt == "Analisis de datos":
-    st.write("### Datos")
+elif opt == "Analisís de datos":
+    st.write("### Graficos de torta para distintas variables nominales")
     st.pyplot(fig3) 
 
 else:
-    st.write("### Serie")
+    st.write("### Serie de tiempo del Promedio mensual de precio por noche")
     st.pyplot(fig4) 
     
 
