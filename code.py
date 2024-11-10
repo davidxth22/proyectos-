@@ -9,7 +9,7 @@ import warnings
 import statsmodels.api as sm
 from statsmodels.graphics.tsaplots import plot_acf 
 from statsmodels.graphics.tsaplots import plot_pacf
-import pmdarima as pm
+
 from statsmodels.tsa.stattools import adfuller
 import itertools
 from statsmodels.tsa.arima.model import ARIMA
