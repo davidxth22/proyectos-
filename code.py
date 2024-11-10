@@ -72,7 +72,7 @@ X,fig1,fig2 = kmeans(datos)
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #Estadistica descriptiva
 
-
+@st.cache_data
 def stats(datos):
     columns_to_plot_pie = [
         'Año', 
