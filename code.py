@@ -218,31 +218,33 @@ elif opt == "Análisis exploratorio de datos":
     
 
 elif opt == "Segmentación de clientes":
-    st.latex("""
+    st.markdown("""
                 En esta sección se realizó una segmentación de clientes utilizando el método **k-means**.
                 
                 El método *k-means* agrupa datos en *k* segmentos o "clusters" al minimizar la distancia entre cada punto de datos y el centro del grupo al que pertenece. 
 
                 Matemáticamente, el objetivo de *k-means* es minimizar la suma de las distancias cuadradas entre cada punto \( x_i \) y el centroide \( \mu_j \) del grupo al que pertenece, según la fórmula:
-                
-                \[
+                """)
+    
+    st.latex(r'''
                 \text{min} \sum_{i=1}^n \sum_{j=1}^k || x_i - \mu_j ||^2
-                \]
+              ''')
 
+    st.markdown("""
                 Aquí:
                 - \( x_i \) es cada punto de datos.
                 - \( \mu_j \) es el centroide del *j*-ésimo grupo.
                 - \( || x_i - \mu_j ||^2 \) representa la distancia cuadrada entre el punto y su centroide.
 
                 En este análisis, utilizamos *k = 4* para identificar cuatro tipos distintos de clientes. Las variables utilizadas para esta segmentación fueron: **Nº Noches**, **Nº Pasajeros**, **Precio por Noche**, **Mascota**, y **Pago en USD**. Estas variables permiten definir patrones específicos, o "huellas de identidad", para cada tipo de cliente.
-
                 """)
+
     st.pyplot(fig1)
     st.write("### Para ver las diferencias entre cada tipo de cliente, se calculó el promedio de cada variable.")
     st.pyplot(fig2)
 
 else:
-    st.latex("""
+    st.markdown("""
                 En esta sección, se realizó un análisis mensual de la variable **Precio por Noche** para estudiar su comportamiento a lo largo del tiempo.
 
                 Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros \((p, d, q) \times (P, D, Q, s)\), donde:
@@ -254,15 +256,18 @@ else:
                 - **\(s\)**: Periodo estacional (por ejemplo, 12 para datos mensuales).
 
                 La estructura del modelo SARIMA es:
-                
-                \[
-                SARIMA(p, d, q) \times (P, D, Q, s)
-                \]
-
-                Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
-
                 """)
+    
+    st.latex(r'''
+                SARIMA(p, d, q) \times (P, D, Q, s)
+              ''')
+
+    st.markdown("""
+                Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
+                """)
+
     st.pyplot(fig4)
+
 
     
 
