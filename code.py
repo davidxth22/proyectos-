@@ -223,7 +223,7 @@ elif opt == "Segmentación de clientes":
                 
                 El método *k-means* agrupa datos en *k* segmentos o "clusters" al minimizar la distancia entre cada punto de datos y el centro del grupo al que pertenece. 
 
-                Matemáticamente, el objetivo de *k-means* es minimizar la suma de las distancias cuadradas entre cada punto \( x_i \) y el centroide \( \mu_j \) del grupo al que pertenece, según la fórmula:
+                Matemáticamente, el objetivo de *k-means* es minimizar la suma de las distancias cuadradas entre cada punto $x_i$ y el centroide $\mu_j$ del grupo al que pertenece, según la fórmula:
                 """)
     
     st.latex(r'''
@@ -232,9 +232,9 @@ elif opt == "Segmentación de clientes":
 
     st.markdown("""
                 Aquí:
-                - \( x_i \) es cada punto de datos.
-                - \( \mu_j \) es el centroide del *j*-ésimo grupo.
-                - \( || x_i - \mu_j ||^2 \) representa la distancia cuadrada entre el punto y su centroide.
+                - $x_i$ es cada punto de datos.
+                - $\mu_j$ es el centroide del *j*-ésimo grupo.
+                - $|| x_i - \mu_j ||^2$ representa la distancia cuadrada entre el punto y su centroide.
 
                 En este análisis, utilizamos *k = 4* para identificar cuatro tipos distintos de clientes. Las variables utilizadas para esta segmentación fueron: **Nº Noches**, **Nº Pasajeros**, **Precio por Noche**, **Mascota**, y **Pago en USD**. Estas variables permiten definir patrones específicos, o "huellas de identidad", para cada tipo de cliente.
                 """)
@@ -247,13 +247,13 @@ else:
     st.markdown("""
                 En esta sección, se realizó un análisis mensual de la variable **Precio por Noche** para estudiar su comportamiento a lo largo del tiempo.
 
-                Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros \((p, d, q) \times (P, D, Q, s)\), donde:
+                Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros $(p, d, q) \times (P, D, Q, s)$, donde:
 
-                - **\(p\)**: Orden del componente autorregresivo.
-                - **\(d\)**: Número de diferenciaciones necesarias para hacer la serie estacionaria.
-                - **\(q\)**: Orden del componente de media móvil.
-                - **\(P\), \(D\), \(Q\)**: Versiones estacionales de los parámetros anteriores.
-                - **\(s\)**: Periodo estacional (por ejemplo, 12 para datos mensuales).
+                - **$p$**: Orden del componente autorregresivo.
+                - **$d$**: Número de diferenciaciones necesarias para hacer la serie estacionaria.
+                - **$q$**: Orden del componente de media móvil.
+                - **$P$, $D$¡, $Q$**: Versiones estacionales de los parámetros anteriores.
+                - **$s$**: Periodo estacional (por ejemplo, 12 para datos mensuales).
 
                 La estructura del modelo SARIMA es:
                 """)
