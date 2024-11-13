@@ -214,7 +214,7 @@ def boxplot_precio_noche(datos):
     sns.set_theme(style="whitegrid")
     
     # Crear gráfico solo para el "Precio x Noche"
-    plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
+    fig = plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
     sns.boxplot(x='Periodo', y='Precio x Noche', data=datos)
     
     # Ajustar título, etiquetas, y demás
@@ -230,7 +230,7 @@ def boxplot_precio_noche(datos):
     # Ajustar el layout para que no se superpongan
     plt.tight_layout()
 
-    return plt
+    return fig
 
 # Llamar a la función y mostrar el gráfico en Streamlit
 fig5 = boxplot_precio_noche(datos)
