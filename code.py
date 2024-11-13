@@ -80,10 +80,10 @@ def barplot_mes(datos):
         sns.barplot(x=counts.index, y=counts.values, palette='viridis', ax=axes[i // 2, i % 2])
         
         # Ajustar título, etiquetas, etc.
-        axes[i // 2, i % 2].set_title(f'Distribución de Observaciones por {column}', fontsize=12, fontweight='bold')  # Aumentar tamaño del título
+        axes[i // 2, i % 2].set_title(f'Distribución de Observaciones por {column}', fontsize=10, fontweight='bold')  # Aumentar tamaño del título
         axes[i // 2, i % 2].set_xlabel(column, fontsize=14)  # Aumentar tamaño de la etiqueta del eje x
         axes[i // 2, i % 2].set_ylabel('Cantidad de Observaciones', fontsize=14)  # Aumentar tamaño de la etiqueta del eje y
-        axes[i // 2, i % 2].tick_params(axis='x', rotation=45, labelsize=10)  # Aumentar tamaño de las etiquetas del eje x
+        axes[i // 2, i % 2].tick_params(axis='x', rotation=45, labelsize=12)  # Aumentar tamaño de las etiquetas del eje x
 
     # Ajustar el layout para que los gráficos no se superpongan
     plt.tight_layout()
