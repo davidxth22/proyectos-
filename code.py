@@ -14,13 +14,25 @@ from sklearn.metrics import mean_squared_error
 
 
 st.set_page_config(layout="wide")
+
+# Título del proyecto
 st.write("""
-# Analisís de datos empresa turismo
+# Prototipo de Análisis de Datos para una Empresa de Turismo
 """)
 
+# Descripción del proyecto
+st.write("""
+Este prototipo forma parte del proyecto final para el curso de Proyectos Estadísticos de la **Universidad Técnica Federico Santa María**. 
+Se realizó en el segundo semestre del año 2024 con el objetivo de aplicar técnicas de análisis de datos en el ámbito del turismo.
+""")
+
+# Información de los estudiantes
+st.write("""
+**Estudiantes**: Diego Astaburuaga y David Rivas
+""")
 
 #Datos
-datos = pd.read_csv("datos.csv")
+datos = pd.read_csv("datos.csv") # Punto de mejora a futuro: Hacer que este code dependa de datos.xlsx y haga las transformaciones necesarias para obtener datos.csv
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #Kmeans code
@@ -33,14 +45,15 @@ def kmeans(datos):
     kmeans = KMeans(n_clusters=4, random_state=0,n_init=10)
     X.loc[:, 'Cluster']= kmeans.fit_predict(X)
     X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
-
+    
     #grafico cantidad de clientes
     counts = X["Cluster"].value_counts().sort_index()
-    counts.index = ["Cliente 1","Cliente 2","Cliente 3","Cliente 4"]
+    counts.index = ["Tipo 1","Tipo 2","Tipo 3","Tipo 4"]
+    percentages = (counts / counts.sum()) * 100
     fig1 = plt.figure(figsize=(12, 6))
-    sns.barplot(x=counts.index, y=counts.values);
-    plt.title("Cantidad de cada cliente")
-    plt.ylabel("Cantidad")
+    sns.barplot(x=counts.index, y=percentages.values);
+    plt.title("Porcentaje de cada tipo de cliente")
+    plt.ylabel("Porcentaje (%)")
     plt.xlabel("Tipo de cliente")
 
     #Grafico promedio clientes
@@ -191,21 +204,67 @@ fig4 = serie(datos)
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #graficos
 
+opt = st.radio("Sección :",["Explicación de variables y estructura de datos", 
+                            "Análisis exploratorio de datos",
+                            "Segmentación de clientes",
+                            "Análisis de series temporales"])
+
 opt = st.radio("Sección :",["Clientes","Analisís de datos","Serie precio por noche"])
 
-if opt == "Clientes":
-    st.write("# Clientes")
-    st.write("### En esta sección se realizo una segmentación de clientes, donde se determino que existen 4 clase de clientes distintos.  Para la segmentación se ocuparon las variables Nº Noches, Nº pasajeros, Precio por Noche, Mascota y Pago en USD")
-    st.pyplot(fig1)
-    st.write("### Para ver las diferencias de cada tipo de cliente respecto a otro, se calculo el promedio de cada variable")
-    st.pyplot(fig2)
-elif opt == "Analisís de datos":
-    st.write("### Graficos de torta para distintas variables nominales")
+st.write("### " + opt)
+
+if opt == "Explicación de variables y estructura de datos":
+    
+elif opt == "Análisis exploratorio de datos":
     st.pyplot(fig3) 
+    
+elif opt == "Segmentación de clientes":
+    st.markdown("""
+                En esta sección se realizó una segmentación de clientes utilizando el método **k-means**.
+                
+                El método *k-means* agrupa datos en *k* segmentos o "clusters" al minimizar la distancia entre cada punto de datos y el centro del grupo al que pertenece. 
+
+                Matemáticamente, el objetivo de *k-means* es minimizar la suma de las distancias cuadradas entre cada punto \( x_i \) y el centroide \( \mu_j \) del grupo al que pertenece, según la fórmula:
+                
+                \[
+                \text{min} \sum_{i=1}^n \sum_{j=1}^k || x_i - \mu_j ||^2
+                \]
+
+                Aquí:
+                - \( x_i \) es cada punto de datos.
+                - \( \mu_j \) es el centroide del *j*-ésimo grupo.
+                - \( || x_i - \mu_j ||^2 \) representa la distancia cuadrada entre el punto y su centroide.
+
+                En este análisis, utilizamos *k = 4* para identificar cuatro tipos distintos de clientes. Las variables utilizadas para esta segmentación fueron: **Nº Noches**, **Nº Pasajeros**, **Precio por Noche**, **Mascota**, y **Pago en USD**. Estas variables permiten definir patrones específicos, o "huellas de identidad", para cada tipo de cliente.
+
+                """)
+    st.pyplot(fig1)
+    st.write("### Para ver las diferencias entre cada tipo de cliente, se calculó el promedio de cada variable.")
+    st.pyplot(fig2)
 
 else:
-    st.write("### Serie de tiempo del Promedio mensual de precio por noche, donde se ajusta un modelo SARIMA para predecir...")
-    st.pyplot(fig4) 
+    st.markdown("""
+                En esta sección, se realizó un análisis mensual de la variable **Precio por Noche** para estudiar su comportamiento a lo largo del tiempo.
+
+                Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros \((p, d, q) \times (P, D, Q, s)\), donde:
+
+                - **\(p\)**: Orden del componente autorregresivo.
+                - **\(d\)**: Número de diferenciaciones necesarias para hacer la serie estacionaria.
+                - **\(q\)**: Orden del componente de media móvil.
+                - **\(P\), \(D\), \(Q\)**: Versiones estacionales de los parámetros anteriores.
+                - **\(s\)**: Periodo estacional (por ejemplo, 12 para datos mensuales).
+
+                La estructura del modelo SARIMA es:
+                
+                \[
+                SARIMA(p, d, q) \times (P, D, Q, s)
+                \]
+
+                Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
+
+                """)
+    st.pyplot(fig4)
+
     
 
 
