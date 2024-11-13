@@ -358,7 +358,7 @@ else:
     st.markdown("""
                 En esta sección, se realizó un análisis mensual de la variable **Precio por Noche** para estudiar su comportamiento a lo largo del tiempo.
 
-                Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros $(p, d, q) \times (P, D, Q, s)$, donde:
+                Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros $(p, d, q) X (P, D, Q, s)$, donde:
 
                 - **$p$**: Orden del componente autorregresivo.
                 - **$d$**: Número de diferenciaciones necesarias para hacer la serie estacionaria.
@@ -374,7 +374,7 @@ else:
               ''')
 
     st.markdown("""
-                Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
+                Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **expanding window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
                 """)
     
     st.pyplot(fig5)
