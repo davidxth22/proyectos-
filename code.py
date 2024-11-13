@@ -213,24 +213,31 @@ def boxplot_precio_noche(datos):
     # Configuración del gráfico
     sns.set_theme(style="whitegrid")
     
-    # Crear gráfico solo para el "Precio x Noche"
-    fig = plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
-    sns.boxplot(x='Periodo', y='Precio x Noche', data=datos)
+    # Crear la figura y los ejes
+    fig, ax = plt.subplots(figsize=(12, 6))  # Cambiar tamaño del gráfico
+    
+    # Crear el boxplot
+    sns.boxplot(x='Periodo', y='Precio x Noche', data=datos, ax=ax)
     
     # Ajustar título, etiquetas, y demás
-    plt.title('Boxplot de Precio x Noche por Periodo (Año-Mes)', fontweight='bold')
-    plt.xlabel('Periodo (Año-Mes)')
-    plt.ylabel('Precio x Noche')
-    plt.tick_params(axis='x', rotation=45)
+    ax.set_title('Boxplot de Precio x Noche por Periodo (Año-Mes)', fontweight='bold')
+    ax.set_xlabel('Periodo (Año-Mes)')
+    ax.set_ylabel('Precio x Noche')
+    ax.tick_params(axis='x', rotation=45)
     
     # Mostrar cada 2 ticks en el eje X
-    ticks = plt.gca().get_xticks()
-    plt.xticks(ticks[::2], rotation=45)
+    ticks = ax.get_xticks()
+    ax.set_xticks(ticks[::2])  # Mostrar cada 2 ticks
+    ax.tick_params(axis='x', rotation=45)  # Asegurar que los ticks estén rotados
     
     # Ajustar el layout para que no se superpongan
     plt.tight_layout()
 
-    return fig
+    return fig  # Retornar la figura
+
+# Llamar a la función y mostrar el gráfico en Streamlit
+fig5 = boxplot_precio_noche(datos)
+
 
 # Llamar a la función y mostrar el gráfico en Streamlit
 fig5 = boxplot_precio_noche(datos)
