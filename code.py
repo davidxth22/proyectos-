@@ -31,55 +31,22 @@ st.write("""
 **Estudiantes**: Diego Astaburuaga y David Rivas
 """)
 
+
+opt = st.radio("Sección :",["Explicación de variables y estructura de datos", 
+                            "Análisis exploratorio de datos",
+                            "Segmentación de clientes",
+                            "Análisis de series temporales"])
+
+st.write("### " + opt)
+
+
+
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------
 #Datos
 datos = pd.read_csv("datos.csv") # Punto de mejora a futuro: Hacer que este code dependa de datos.xlsx y haga las transformaciones necesarias para obtener datos.csv
 
-#-----------------------------------------------------------------------------------------------------------------------------------------
-#Kmeans code
-
-@st.cache_data
-def kmeans(datos):
-    #modelo
-    X = datos[['N° Noches', 'N° Pasajeros', 'Precio x Noche','Mascota','Pago en USD']]
-    warnings.filterwarnings("ignore", category=UserWarning, message="KMeans is known to have a memory leak")
-    kmeans = KMeans(n_clusters=4, random_state=0,n_init=10) 
-    X.loc[:, 'Cluster']= kmeans.fit_predict(X)
-    X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
-    
-    row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']
-    
-    #grafico cantidad de clientes
-    counts = X["Cluster"].value_counts().sort_index()
-    counts.index = ["Tipo 1","Tipo 2","Tipo 3","Tipo 4"]
-    percentages = (counts / counts.sum()) * 100
-    fig1 = plt.figure(figsize=(12, 6))
-    sns.barplot(x=counts.index, y=percentages.values, palette=row_colors, edgecolor='black');
-    plt.title("Porcentaje de cada tipo de cliente", fontsize=16, weight='bold')
-    plt.ylabel("Porcentaje (%)")
-    plt.xlabel("Tipo de cliente")
-
-    #Grafico promedio clientes
-    cluster_means =X.groupby('Cluster').mean()
-    num_clusters = len(cluster_means.index)
-    num_vars = len(cluster_means.columns)
-    y_lims = {var: (cluster_means[var].min() * 0.9, cluster_means[var].max() * 1.1) for var in cluster_means.columns}
-    fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True) 
-    h=1
-    for i, cluster in enumerate(cluster_means.index):
-        for j, var in enumerate(cluster_means.columns):
-            axes[i, j].bar([f'Cliente {h}'], [cluster_means.loc[cluster, var]], color=row_colors[i % len(row_colors)], edgecolor='black')
-            axes[i, j].set_title(f'{var}', fontsize=14)
-            axes[i, j].set_ylabel('Promedio', fontsize=9)
-            axes[i, j].set_ylim(y_lims[var])
-            axes[i, j].tick_params(axis='y', labelsize=9)
-        h+=1
-    plt.suptitle('Promedio de Variables por Cliente', fontsize=16, weight='bold')
-
-    
-    
-    return X,fig1,fig2
-
-X,fig1,fig2 = kmeans(datos)
 
 
 
@@ -126,7 +93,52 @@ fig3 = stats(datos)
   
 
 
+#-----------------------------------------------------------------------------------------------------------------------------------------
+#Kmeans code
 
+@st.cache_data
+def kmeans(datos):
+    #modelo
+    X = datos[['N° Noches', 'N° Pasajeros', 'Precio x Noche','Mascota','Pago en USD']]
+    warnings.filterwarnings("ignore", category=UserWarning, message="KMeans is known to have a memory leak")
+    kmeans = KMeans(n_clusters=4, random_state=0,n_init=10) 
+    X.loc[:, 'Cluster']= kmeans.fit_predict(X)
+    X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
+    
+    row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']
+    
+    #grafico cantidad de clientes
+    counts = X["Cluster"].value_counts().sort_index()
+    counts.index = ["Cliente 1","Cliente 2","Cliente 3","Cliente 4"]
+    percentages = (counts / counts.sum()) * 100
+    fig1 = plt.figure(figsize=(12, 6))
+    sns.barplot(x=counts.index, y=percentages.values, palette=row_colors, edgecolor='black');
+    plt.title("Porcentaje de cada tipo de cliente", fontsize=16, weight='bold')
+    plt.ylabel("Porcentaje (%)")
+    plt.xlabel("Tipo de cliente")
+
+    #Grafico promedio clientes
+    cluster_means =X.groupby('Cluster').mean()
+    num_clusters = len(cluster_means.index)
+    num_vars = len(cluster_means.columns)
+    y_lims = {var: (cluster_means[var].min() * 0.9, cluster_means[var].max() * 1.1) for var in cluster_means.columns}
+    fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True) 
+    h=1
+    for i, cluster in enumerate(cluster_means.index):
+        for j, var in enumerate(cluster_means.columns):
+            axes[i, j].bar([f'Cliente {h}'], [cluster_means.loc[cluster, var]], color=row_colors[i % len(row_colors)], edgecolor='black')
+            axes[i, j].set_title(f'{var}', fontsize=14)
+            axes[i, j].set_ylabel('Promedio', fontsize=9)
+            axes[i, j].set_ylim(y_lims[var])
+            axes[i, j].tick_params(axis='y', labelsize=9)
+        h+=1
+    plt.suptitle('Promedio de Variables por Cliente', fontsize=16, weight='bold')
+
+    
+    
+    return X,fig1,fig2
+
+X,fig1,fig2 = kmeans(datos)
 
 
 
@@ -135,7 +147,7 @@ fig3 = stats(datos)
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
-#Serie de tiempo
+# Serie de tiempo
 @st.cache_data
 def serie(datos):
     df_serie = datos[['Año','Mes','Precio x Noche']].copy()
@@ -200,17 +212,8 @@ fig4 = serie(datos)
 
 
 
-
-
 #-----------------------------------------------------------------------------------------------------------------------------------------
-#graficos
-
-opt = st.radio("Sección :",["Explicación de variables y estructura de datos", 
-                            "Análisis exploratorio de datos",
-                            "Segmentación de clientes",
-                            "Análisis de series temporales"])
-
-st.write("### " + opt)
+# Visualizador
 
 if opt == "Explicación de variables y estructura de datos":
     st.pyplot(fig3) 
@@ -243,6 +246,14 @@ elif opt == "Segmentación de clientes":
     st.pyplot(fig1)
     st.write("### Para ver las diferencias entre cada tipo de cliente, se calculó el promedio de cada variable.")
     st.pyplot(fig2)
+    
+    st.markdown("""
+                Para la fecha de entrega del informe y datos utilizados, se utilizó k=4, dando a cuenta cuatro tipo de clientes de la empresa.
+                A saber, un perfil de gente que paga en USD que tiene a pagar un precio promedio por noche mayor (Cliente 4) o
+                un tipo de cliente que paga en moneda CLP que tiene a ir en grandes grupos y por una estadía mayor (Cliente 2).
+                Notandose además que para clientes que pagan poco por noche (Cliente 1 y 3), también hay pocas noches,
+                mientras que aquello que pagan más noches, también pagan un precio x noche más elevado.
+                """)
 
 else:
     st.markdown("""
@@ -268,6 +279,10 @@ else:
                 """)
 
     st.pyplot(fig4)
+    
+    st.markdown("""
+                De lo observado, se puede notar una fuente estacionalidad cada año respecto a los precios.
+                """)
 
 
     
