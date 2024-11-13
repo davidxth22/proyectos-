@@ -53,8 +53,8 @@ def kmeans(datos):
     counts.index = ["Tipo 1","Tipo 2","Tipo 3","Tipo 4"]
     percentages = (counts / counts.sum()) * 100
     fig1 = plt.figure(figsize=(12, 6))
-    sns.barplot(x=counts.index, y=percentages.values, palette=row_colors);
-    plt.title("Porcentaje de cada tipo de cliente")
+    sns.barplot(x=counts.index, y=percentages.values, palette=row_colors, edgecolor='black');
+    plt.title("Porcentaje de cada tipo de cliente", fontsize=16, weight='bold')
     plt.ylabel("Porcentaje (%)")
     plt.xlabel("Tipo de cliente")
 
