@@ -106,7 +106,7 @@ def barplot(datos):
     sns.set_theme(style="whitegrid")
     fig3, axes = plt.subplots(2, 4, figsize=(18, 20)) 
     for i, column in enumerate(columns_to_plot_pie):
-        row, col = divmod(i, 2)
+        row, col = divmod(i, 4)
         ax = axes[row, col]
         counts = datos[column].value_counts()
         if column == "Mascota":
