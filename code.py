@@ -209,8 +209,6 @@ opt = st.radio("Sección :",["Explicación de variables y estructura de datos",
                             "Segmentación de clientes",
                             "Análisis de series temporales"])
 
-opt = st.radio("Sección :",["Clientes","Analisís de datos","Serie precio por noche"])
-
 st.write("### " + opt)
 
 if opt == "Explicación de variables y estructura de datos":
