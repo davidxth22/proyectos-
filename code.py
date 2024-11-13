@@ -208,30 +208,29 @@ X,fig3,fig4 = kmeans(datos)
 #-----------------------------------------------------------------------------------------------------------------------------------------
 # Serie de tiempo
 
-# @st.cache_data
-# def boxplot_precio_noche(datos):
-#     # Configuración del gráfico
-#     sns.set_theme(style="whitegrid")
+@st.cache_data
+def boxplot_precio_noche(datos):
+    # Configuración del gráfico
+    sns.set_theme(style="whitegrid")
     
-#     # Crear gráfico solo para el "Precio x Noche"
-#     plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
-#     sns.boxplot(x='Periodo', y='Precio x Noche', data=datos)
+    # Crear gráfico solo para el "Precio x Noche"
+    fig = plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
+    sns.boxplot(x='Periodo', y='Precio x Noche', data=datos)
     
-#     # Ajustar título, etiquetas, y demás
-#     plt.title('Boxplot de Precio x Noche por Periodo (Año-Mes)', fontweight='bold')
-#     plt.xlabel('Periodo (Año-Mes)')
-#     plt.ylabel('Precio x Noche')
-#     plt.tick_params(axis='x', rotation=45)
-#     plt.xticks(ticks=plt.xticks()[0][::2])  # Mostrar cada 2 ticks en el eje X
+    # Ajustar título, etiquetas, y demás
+    plt.title('Boxplot de Precio x Noche por Periodo (Año-Mes)', fontweight='bold')
+    plt.xlabel('Periodo (Año-Mes)')
+    plt.ylabel('Precio x Noche')
+    plt.tick_params(axis='x', rotation=45)
+    plt.xticks(ticks=plt.xticks()[0][::2])  # Mostrar cada 2 ticks en el eje X
     
-#     # Ajustar el layout para que no se superpongan
-#     plt.tight_layout()
-#     plt.show()
+    # Ajustar el layout para que no se superpongan
+    plt.tight_layout()
 
-#     return plt
+    return fig
 
-# # Llamar a la función y mostrar el gráfico en Streamlit
-# fig5 = boxplot_precio_noche(datos)
+# Llamar a la función y mostrar el gráfico en Streamlit
+fig5 = boxplot_precio_noche(datos)
 
 
 
@@ -367,7 +366,7 @@ else:
                 Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
                 """)
     
-    # st.pyplot(fig5)
+    st.pyplot(fig5)
 
     st.pyplot(fig6)
     
