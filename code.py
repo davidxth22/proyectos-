@@ -54,41 +54,46 @@ datos = pd.read_csv("datos.csv") # Punto de mejora a futuro: Hacer que este code
 #Estadistica descriptiva
 
 @st.cache_data
-def stats(datos):
-    columns_to_plot_pie = [
-        'Año', 
-        'Asset Code', 
-        'Mascota', 
-        'Canal de Venta', 
-        'Medio de Pago', 
-        'Boleta/Factura', 
-        'Pago en USD'
+def barplot_mes(datos):
+    # Asegurarse de que la columna "Mes" sea un tipo categórico con un orden específico
+    meses_ordenados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    datos['Mes'] = pd.Categorical(datos['Mes'], categories=meses_ordenados, ordered=True)
+    
+    # Lista de columnas para gráficos de barras
+    columns_to_plot_bar = [
+        'Mes',
+        'N° Noches', 
+        'N° Pasajeros',
+        'Periodo'
     ]
-    sns.set_theme(style="whitegrid")
-    fig3, axes = plt.subplots(4, 3, figsize=(18, 20)) 
-    for i, column in enumerate(columns_to_plot_pie):
-        row, col = divmod(i, 3)
-        ax = axes[row, col]
-        counts = datos[column].value_counts()
-        if column == "Mascota":
-            cc = ["Mascota","Sin Mascota"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
-        elif column == "Pago en USD":
-            cc = ["Paga en USD","No paga en USD"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
-        else:
-            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
-        ax.set_title(f'Distribución de Observaciones por {column}')
-        ax.axis('equal') 
-    for j in range(len(columns_to_plot_pie), 12):
-        fig3.delaxes(axes.flatten()[j])
+    
+    # Crear una grilla 2x2
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    
+    # Crear gráficos de barras para cada columna
+    for i, column in enumerate(columns_to_plot_bar):
+        # Contar la cantidad de observaciones por cada categoría en la columna
+        counts = datos[column].value_counts().sort_index()
+        
+        # Crear el gráfico de barras en la subtrama correspondiente
+        sns.barplot(x=counts.index, y=counts.values, palette='viridis', ax=axes[i // 2, i % 2])
+        
+        # Ajustar título, etiquetas, etc.
+        axes[i // 2, i % 2].set_title(f'Distribución de Observaciones por {column}', fontsize=16, fontweight='bold')  # Aumentar tamaño del título
+        axes[i // 2, i % 2].set_xlabel(column, fontsize=14)  # Aumentar tamaño de la etiqueta del eje x
+        axes[i // 2, i % 2].set_ylabel('Cantidad de Observaciones', fontsize=14)  # Aumentar tamaño de la etiqueta del eje y
+        axes[i // 2, i % 2].tick_params(axis='x', rotation=45, labelsize=12)  # Aumentar tamaño de las etiquetas del eje x
 
+    # Ajustar el layout para que los gráficos no se superpongan
     plt.tight_layout()
     plt.show()
-    return fig3
+    
+    return fig
 
+# Llamar a la función y almacenar la figura
+fig1 = barplot_mes(datos)
 
-fig3 = stats(datos)
 
 @st.cache_data
 def barplot(datos):
@@ -127,7 +132,7 @@ def barplot(datos):
             ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
         
         # Configurar título y formato del gráfico
-        ax.set_title(f'Distribución de Observaciones por {column}')
+        ax.set_title(f'%Observaciones por {column}')
         ax.axis('equal')  # Asegura que el pie chart sea circular
     
     # Eliminar subgráficos vacíos si los hay
@@ -141,7 +146,7 @@ def barplot(datos):
     return fig3
 
 # Llamar a la función y almacenar la figura
-fig3 = barplot(datos)
+fig2 = barplot(datos)
 
 
   
@@ -192,7 +197,7 @@ def kmeans(datos):
     
     return X,fig1,fig2
 
-X,fig1,fig2 = kmeans(datos)
+X,fig3,fig4 = kmeans(datos)
 
 
 
@@ -256,7 +261,7 @@ def serie(datos):
     plt.tight_layout()
     return fig4
 
-fig4 = serie(datos)
+fig5 = serie(datos)
 
 
 
@@ -273,7 +278,8 @@ if opt == "Explicación de variables y estructura de datos":
     st.markdown("Página en mantención. (Se omite está página en la versión final por temas de diseño)")
     
 elif opt == "Análisis exploratorio de datos":
-    st.pyplot(fig3) 
+    st.pyplot(fig1)
+    st.pyplot(fig2) 
     
 
 elif opt == "Segmentación de clientes":
@@ -298,9 +304,9 @@ elif opt == "Segmentación de clientes":
                 En este análisis, utilizamos *k = 4* para identificar cuatro tipos distintos de clientes. Las variables utilizadas para esta segmentación fueron: **Nº Noches**, **Nº Pasajeros**, **Precio por Noche**, **Mascota**, y **Pago en USD**. Estas variables permiten definir patrones específicos, o "huellas de identidad", para cada tipo de cliente.
                 """)
 
-    st.pyplot(fig1)
+    st.pyplot(fig3)
     st.write("### Para ver las diferencias entre cada tipo de cliente, se calculó el promedio de cada variable.")
-    st.pyplot(fig2)
+    st.pyplot(fig4)
     
     st.markdown("""
                 Para la fecha de entrega del informe y datos utilizados, se utilizó k=4, dando a cuenta cuatro tipo de clientes de la empresa.
@@ -333,7 +339,7 @@ else:
                 Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
                 """)
 
-    st.pyplot(fig4)
+    st.pyplot(fig5)
     
     st.markdown("""
                 De lo observado, se puede notar una fuente estacionalidad cada año respecto a los precios.
