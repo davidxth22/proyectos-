@@ -212,7 +212,7 @@ opt = st.radio("Sección :",["Explicación de variables y estructura de datos",
 st.write("### " + opt)
 
 if opt == "Explicación de variables y estructura de datos":
-
+    st.pyplot(fig3) 
 elif opt == "Análisis exploratorio de datos":
     st.pyplot(fig3) 
     
