@@ -99,12 +99,14 @@ def barplot(datos):
         'Canal de Venta', 
         'Medio de Pago', 
         'Boleta/Factura', 
-        'Pago en USD'
+        'Pago en USD',
+        'Clean Up'
     ]
+    
     sns.set_theme(style="whitegrid")
-    fig3, axes = plt.subplots(4, 3, figsize=(18, 20)) 
+    fig3, axes = plt.subplots(2, 4, figsize=(18, 20)) 
     for i, column in enumerate(columns_to_plot_pie):
-        row, col = divmod(i, 3)
+        row, col = divmod(i, 2)
         ax = axes[row, col]
         counts = datos[column].value_counts()
         if column == "Mascota":
