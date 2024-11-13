@@ -92,6 +92,7 @@ fig3 = stats(datos)
 
 @st.cache_data
 def barplot(datos):
+    # Columnas a graficar
     columns_to_plot_pie = [
         'Año', 
         'Asset Code', 
@@ -103,31 +104,45 @@ def barplot(datos):
         'Clean Up'
     ]
     
+    # Estilo para los gráficos
     sns.set_theme(style="whitegrid")
+    
+    # Crear subgráficos
     fig3, axes = plt.subplots(2, 4, figsize=(18, 20)) 
+    
+    # Recorrer las columnas y graficar
     for i, column in enumerate(columns_to_plot_pie):
         row, col = divmod(i, 4)
         ax = axes[row, col]
         counts = datos[column].value_counts()
+        
+        # Personalizar etiquetas para ciertos casos
         if column == "Mascota":
-            cc = ["Mascota","Sin Mascota"]
+            cc = ["Mascota", "Sin Mascota"]
             ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
         elif column == "Pago en USD":
-            cc = ["Paga en USD","No paga en USD"]
+            cc = ["Paga en USD", "No paga en USD"]
             ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
         else:
             ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
+        
+        # Configurar título y formato del gráfico
         ax.set_title(f'Distribución de Observaciones por {column}')
-        ax.axis('equal') 
-    for j in range(len(columns_to_plot_pie), 12):
+        ax.axis('equal')  # Asegura que el pie chart sea circular
+    
+    # Eliminar subgráficos vacíos si los hay
+    for j in range(len(columns_to_plot_pie), 8):  # Hay 8 subgráficos posibles, ya que es 2x4
         fig3.delaxes(axes.flatten()[j])
 
+    # Ajustar el diseño y mostrar la figura
     plt.tight_layout()
     plt.show()
+    
     return fig3
 
+# Llamar a la función y almacenar la figura
+fig3 = barplot(datos)
 
-barplot = barplot(datos)
 
   
 
