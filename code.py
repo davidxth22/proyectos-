@@ -363,14 +363,14 @@ else:
                 - **$p$**: Orden del componente autorregresivo.
                 - **$d$**: Número de diferenciaciones necesarias para hacer la serie estacionaria.
                 - **$q$**: Orden del componente de media móvil.
-                - **$P$, $D$¡, $Q$**: Versiones estacionales de los parámetros anteriores.
+                - **$P$, $D$, $Q$**: Versiones estacionales de los parámetros anteriores.
                 - **$s$**: Periodo estacional (por ejemplo, 12 para datos mensuales).
 
                 La estructura del modelo SARIMA es:
                 """)
     
     st.latex(r'''
-                SARIMA(p, d, q) \times (P, D, Q, s)
+                SARIMA(p, d, q) X (P, D, Q, s)
               ''')
 
     st.markdown("""
