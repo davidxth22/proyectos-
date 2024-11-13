@@ -370,7 +370,7 @@ else:
                 """)
     
     st.latex(r'''
-                SARIMA(p, d, q) X (P, D, Q, s)
+                SARIMA(p, d, q) \times (P, D, Q, s)
               ''')
 
     st.markdown("""
