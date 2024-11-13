@@ -96,7 +96,7 @@ fig1 = barplot_mes(datos)
 
 
 @st.cache_data
-def barplot(datos):
+def pieplot(datos):
     # Columnas a graficar
     columns_to_plot_pie = [
         'Año', 
@@ -124,15 +124,15 @@ def barplot(datos):
         # Personalizar etiquetas para ciertos casos
         if column == "Mascota":
             cc = ["Mascota", "Sin Mascota"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
         elif column == "Pago en USD":
             cc = ["Paga en USD", "No paga en USD"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
         else:
-            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
+            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
         
         # Configurar título y formato del gráfico
-        ax.set_title(f'%Observaciones por {column}')
+        ax.set_title(f'%Observaciones por {column}', fontsize=16, fontweight='bold')
         ax.axis('equal')  # Asegura que el pie chart sea circular
     
     # Eliminar subgráficos vacíos si los hay
@@ -146,7 +146,7 @@ def barplot(datos):
     return fig3
 
 # Llamar a la función y almacenar la figura
-fig2 = barplot(datos)
+fig2 = pieplot(datos)
 
 
   
