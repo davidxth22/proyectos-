@@ -90,6 +90,43 @@ def stats(datos):
 
 fig3 = stats(datos)
 
+@st.cache_data
+def barplot(datos):
+    columns_to_plot_pie = [
+        'Año', 
+        'Asset Code', 
+        'Mascota', 
+        'Canal de Venta', 
+        'Medio de Pago', 
+        'Boleta/Factura', 
+        'Pago en USD'
+    ]
+    sns.set_theme(style="whitegrid")
+    fig3, axes = plt.subplots(4, 3, figsize=(18, 20)) 
+    for i, column in enumerate(columns_to_plot_pie):
+        row, col = divmod(i, 3)
+        ax = axes[row, col]
+        counts = datos[column].value_counts()
+        if column == "Mascota":
+            cc = ["Mascota","Sin Mascota"]
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+        elif column == "Pago en USD":
+            cc = ["Paga en USD","No paga en USD"]
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
+        else:
+            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
+        ax.set_title(f'Distribución de Observaciones por {column}')
+        ax.axis('equal') 
+    for j in range(len(columns_to_plot_pie), 12):
+        fig3.delaxes(axes.flatten()[j])
+
+    plt.tight_layout()
+    plt.show()
+    return fig3
+
+
+barplot = barplot(datos)
+
   
 
 
@@ -216,7 +253,8 @@ fig4 = serie(datos)
 # Visualizador
 
 if opt == "Explicación de variables y estructura de datos":
-    st.pyplot(fig3) 
+    st.markdown("Página en mantención. (Se omite está página en la versión final por temas de diseño)")
+    
 elif opt == "Análisis exploratorio de datos":
     st.pyplot(fig3) 
     
@@ -250,8 +288,8 @@ elif opt == "Segmentación de clientes":
     st.markdown("""
                 Para la fecha de entrega del informe y datos utilizados, se utilizó k=4, dando a cuenta cuatro tipo de clientes de la empresa.
                 A saber, un perfil de gente que paga en USD que tiene a pagar un precio promedio por noche mayor (Cliente 4) o
-                un tipo de cliente que paga en moneda CLP que tiene a ir en grandes grupos y por una estadía mayor (Cliente 2).
-                Notandose además que para clientes que pagan poco por noche (Cliente 1 y 3), también hay pocas noches,
+                un tipo de cliente que paga en moneda CLP que tiende a ir en grandes grupos y por una estadía mayor (Cliente 2).
+                Notandose además que para clientes que pagan poco por noche (Cliente 1 y 3), tienen estadias más cortas,
                 mientras que aquello que pagan más noches, también pagan un precio x noche más elevado.
                 """)
 
