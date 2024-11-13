@@ -214,10 +214,11 @@ opt = st.radio("Sección :",["Clientes","Analisís de datos","Serie precio por n
 st.write("### " + opt)
 
 if opt == "Explicación de variables y estructura de datos":
-    
+
 elif opt == "Análisis exploratorio de datos":
     st.pyplot(fig3) 
     
+
 elif opt == "Segmentación de clientes":
     st.markdown("""
                 En esta sección se realizó una segmentación de clientes utilizando el método **k-means**.
