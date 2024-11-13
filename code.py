@@ -42,16 +42,18 @@ def kmeans(datos):
     #modelo
     X = datos[['N° Noches', 'N° Pasajeros', 'Precio x Noche','Mascota','Pago en USD']]
     warnings.filterwarnings("ignore", category=UserWarning, message="KMeans is known to have a memory leak")
-    kmeans = KMeans(n_clusters=4, random_state=0,n_init=10)
+    kmeans = KMeans(n_clusters=4, random_state=0,n_init=10) 
     X.loc[:, 'Cluster']= kmeans.fit_predict(X)
     X.loc[:, 'Cluster'] = X.loc[:, 'Cluster'].astype(str)
+    
+    row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']
     
     #grafico cantidad de clientes
     counts = X["Cluster"].value_counts().sort_index()
     counts.index = ["Tipo 1","Tipo 2","Tipo 3","Tipo 4"]
     percentages = (counts / counts.sum()) * 100
     fig1 = plt.figure(figsize=(12, 6))
-    sns.barplot(x=counts.index, y=percentages.values);
+    sns.barplot(x=counts.index, y=percentages.values, palette=row_colors);
     plt.title("Porcentaje de cada tipo de cliente")
     plt.ylabel("Porcentaje (%)")
     plt.xlabel("Tipo de cliente")
@@ -61,8 +63,7 @@ def kmeans(datos):
     num_clusters = len(cluster_means.index)
     num_vars = len(cluster_means.columns)
     y_lims = {var: (cluster_means[var].min() * 0.9, cluster_means[var].max() * 1.1) for var in cluster_means.columns}
-    fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True)
-    row_colors = ['skyblue', 'lightgreen', 'salmon','yellow']  
+    fig2, axes = plt.subplots(nrows=num_clusters, ncols=num_vars, figsize=(12, 13), constrained_layout=True) 
     h=1
     for i, cluster in enumerate(cluster_means.index):
         for j, var in enumerate(cluster_means.columns):
