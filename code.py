@@ -214,7 +214,7 @@ def boxplot_precio_noche(datos):
     sns.set_theme(style="whitegrid")
     
     # Crear gráfico solo para el "Precio x Noche"
-    fig = plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
+    plt.figure(figsize=(12, 6))  # Cambiar tamaño del gráfico
     sns.boxplot(x='Periodo', y='Precio x Noche', data=datos)
     
     # Ajustar título, etiquetas, y demás
@@ -222,15 +222,19 @@ def boxplot_precio_noche(datos):
     plt.xlabel('Periodo (Año-Mes)')
     plt.ylabel('Precio x Noche')
     plt.tick_params(axis='x', rotation=45)
-    plt.xticks(ticks=plt.xticks()[0][::2])  # Mostrar cada 2 ticks en el eje X
+    
+    # Mostrar cada 2 ticks en el eje X
+    ticks = plt.gca().get_xticks()
+    plt.xticks(ticks[::2], rotation=45)
     
     # Ajustar el layout para que no se superpongan
     plt.tight_layout()
 
-    return fig
+    return plt
 
 # Llamar a la función y mostrar el gráfico en Streamlit
 fig5 = boxplot_precio_noche(datos)
+
 
 
 
