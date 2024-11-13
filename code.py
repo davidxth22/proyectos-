@@ -124,12 +124,12 @@ def pieplot(datos):
         # Personalizar etiquetas para ciertos casos
         if column == "Mascota":
             cc = ["Mascota", "Sin Mascota"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
         elif column == "Pago en USD":
             cc = ["Paga en USD", "No paga en USD"]
-            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
+            ax.pie(counts, labels=cc, autopct='%1.1f%%', startangle=90)
         else:
-            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90, fontsize=16, fontweight='bold')
+            ax.pie(counts, labels=counts.index, autopct='%1.1f%%', startangle=90)
         
         # Configurar título y formato del gráfico
         ax.set_title(f'%Observaciones por {column}', fontsize=16, fontweight='bold')
@@ -208,7 +208,7 @@ X,fig3,fig4 = kmeans(datos)
 #-----------------------------------------------------------------------------------------------------------------------------------------
 # Serie de tiempo
 @st.cache_data
-def serie(datos):
+def serie_forecast(datos):
     df_serie = datos[['Año','Mes','Precio x Noche']].copy()
     meses = {
         'Enero': '01', 'Febrero': '02', 'Marzo': '03', 'Abril': '04',
@@ -261,7 +261,7 @@ def serie(datos):
     plt.tight_layout()
     return fig4
 
-fig5 = serie(datos)
+fig6 = serie_forecast(datos)
 
 
 
