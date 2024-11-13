@@ -339,7 +339,7 @@ else:
                 Además, para capturar la evolución de la **Precio por Noche** a través del tiempo, se utilizó el método **rolling window**. Este método realiza el ajuste del modelo en una ventana de tiempo móvil, recalculando los parámetros en cada paso para obtener predicciones actualizadas.
                 """)
 
-    st.pyplot(fig5)
+    st.pyplot(fig6)
     
     st.markdown("""
                 De lo observado, se puede notar una fuente estacionalidad cada año respecto a los precios.
