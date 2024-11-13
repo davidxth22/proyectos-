@@ -218,7 +218,7 @@ elif opt == "Análisis exploratorio de datos":
     
 
 elif opt == "Segmentación de clientes":
-    st.markdown("""
+    st.latex("""
                 En esta sección se realizó una segmentación de clientes utilizando el método **k-means**.
                 
                 El método *k-means* agrupa datos en *k* segmentos o "clusters" al minimizar la distancia entre cada punto de datos y el centro del grupo al que pertenece. 
@@ -242,7 +242,7 @@ elif opt == "Segmentación de clientes":
     st.pyplot(fig2)
 
 else:
-    st.markdown("""
+    st.latex("""
                 En esta sección, se realizó un análisis mensual de la variable **Precio por Noche** para estudiar su comportamiento a lo largo del tiempo.
 
                 Para modelar esta serie temporal, se utilizó un modelo **SARIMA** (Seasonal Autoregressive Integrated Moving Average). Este modelo es adecuado para datos que muestran patrones estacionales y se define mediante los parámetros \((p, d, q) \times (P, D, Q, s)\), donde:
